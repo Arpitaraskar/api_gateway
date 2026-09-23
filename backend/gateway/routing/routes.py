@@ -5,7 +5,12 @@ ROUTES={
     "users":{
         "service_url":USER_SERVICE_URL,
         "upstream_path":"/users",
-    }
+    },
+
+    "auth": {
+        "service_url": USER_SERVICE_URL,
+        "upstream_path": "/auth",
+    },
 
    
 }
@@ -13,3 +18,4 @@ ROUTES={
 
 def get_route(service_name: str):
     return ROUTES.get(service_name)
+

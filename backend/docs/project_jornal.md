@@ -1351,4 +1351,71 @@ Reviewed and hardened proxy_service.py
  Remove temporary /users/test endpoint
  Automated tests — next step
 
+ ## sprint 17
+
+ Authentication testing — COMPLETE
+ No JWT → 401
+ Invalid JWT → 401
+ Valid JWT → 200
+ Expired JWT → 401
+2. Gateway routing — IN PROGRESS
+ Unknown service without authentication → 401
+ Unknown service with valid JWT → 404
+ Dynamic route /api/users/25 → 200
+ Test another dynamic ID, e.g. /api/users/99
+3. User Service support
+
+We discovered /users/25 didn't exist, so we added:
+
+GET /users/{user_id}
+
+and verified directly:
+
+GET /users/25
+→ 200
+→ {"id":25,"name":"User 25"}
+
+Then we verified the same request through the Gateway:
+
+GET /api/users/25
+→ 200
+4. Important debugging lesson
+
+Today we followed the correct debugging flow:
+
+Gateway test failed
+       ↓
+Test upstream directly
+       ↓
+User Service returned 404
+       ↓
+Fix User Service route
+       ↓
+Test User Service directly → 200
+       ↓
+Test Gateway again → 200
+
+This is exactly how we should debug the project instead of randomly changing Gateway code.
+
+📌 Tomorrow's starting point
+
+First:
+
+/api/users/99
+
+Then:
+
+Request forwarding tests
+
+Query parameters
+Headers
+Request body
+POST
+PUT
+DELETE
+
+After that we'll continue with the remaining integration tests.
+
+Today's checkpoint: Gateway dynamic routing is confirmed working for /api/users/25.
+
 

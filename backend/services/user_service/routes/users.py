@@ -36,8 +36,16 @@ def get_me(
 #     }
 
 @router.get("/test")
-def test_query(limit: int = 10):
+def test_query(limit: int):
     return {
         "limit": limit
     }
 
+@router.get("/{user_id}")
+def get_user(user_id: int):
+    return {
+        "id": user_id,
+        "name": f"User {user_id}"
+    }
+
+#request body forwarding

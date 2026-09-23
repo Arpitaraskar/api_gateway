@@ -29,7 +29,7 @@ def create_access_token(
     )
 
     # TEMPORARY: create an already-expired token for testing.
-    #expire = now - timedelta(minutes=1)
+    # expire = now - timedelta(minutes=1)
 
     payload["iat"] = now
     payload["exp"] = expire
@@ -44,8 +44,7 @@ def create_access_token(
 
 def verify_access_token(token: str) -> dict:
     try:
-        # Decode the token using the same secret and algorithm
-        # that were used when the token was created.
+        
         payload = jwt.decode(
             token,
             JWT_SECRET,
