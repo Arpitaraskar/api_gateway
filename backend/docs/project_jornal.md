@@ -1416,6 +1416,32 @@ DELETE
 
 After that we'll continue with the remaining integration tests.
 
+## sprint 18
+
 Today's checkpoint: Gateway dynamic routing is confirmed working for /api/users/25.
+
+ested dynamic path forwarding
+ Tested query parameter forwarding
+ Tested Authorization header forwarding
+ Tested JSON request-body forwarding
+ Fixed test-file syntax error
+ All related tests passed
+ Committed/pushed request-forwarding test checkpoint
+
+Concept learned: Gateway must preserve important parts of the incoming request — path, query params, headers, and body — when forwarding to the upstream service.
+
+## sprint 19
+
+ Made GET /users/{user_id} admin-only
+ Added require_admin() authorization
+ Verified normal user → 403
+ Created admin user using scripts/create_admin.py
+ Verified admin → 200
+ Verified admin + nonexistent user → 404
+ Understood authentication vs authorization
+ Understood why API security matters
+ Understood the Gateway → User Service → DB flow
+
+Checkpoint: Admin authorization for the user-details API is complete.
 
 

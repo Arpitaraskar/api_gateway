@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends
-
-
-
+from fastapi import APIRouter, Depends,HTTPException,status
+from sqlalchemy.orm import Session
 from services.user_service.core.dependencies import get_current_user
+from services.user_service.core.authorization import require_admin
 from services.user_service.database import models
+from services.user_service.database.database import get_db
 from services.user_service.schemas.user import UserResponse
 
 
@@ -41,11 +41,27 @@ def test_query(limit: int):
         "limit": limit
     }
 
-@router.get("/{user_id}")
-def get_user(user_id: int):
-    return {
-        "id": user_id,
-        "name": f"User {user_id}"
-    }
+#TEMPORARY — used only to verify gateway path forwarding, not a real endpoint
 
-#request body forwarding
+# @router.get("/{user_id}")
+# def get_user(user_id: int):
+#     return {
+#         "id": user_id,
+#         "name": f"User {user_id}"
+#     }
+
+@router.get("/{user_id}", response_model=UserResponse)
+def get_user(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(require_admin)  
+):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="User not found"
+            )
+
+    return user
