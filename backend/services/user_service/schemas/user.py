@@ -29,3 +29,7 @@ class UserResponse(BaseModel):
     name: str
     email: EmailStr
     role: str
+
+class UserUpdate(BaseModel):
+    name:str | None = None
+    email:EmailStr | None = None

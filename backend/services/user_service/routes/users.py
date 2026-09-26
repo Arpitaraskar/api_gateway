@@ -4,7 +4,8 @@ from services.user_service.core.dependencies import get_current_user
 from services.user_service.core.authorization import require_admin
 from services.user_service.database import models
 from services.user_service.database.database import get_db
-from services.user_service.schemas.user import UserResponse
+from services.user_service.schemas.user import UserResponse,UserUpdate
+from services.user_service.services.auth_service import update_current_user
 
 
 router = APIRouter(
@@ -25,15 +26,18 @@ def get_me(
     return current_user
 
 
-# @router.get("/slow")
-# async def slow_endpoint():
-#     # Temporary endpoint used to verify that the Gateway
-#     # stops waiting when an upstream service takes too long.
-#     await asyncio.sleep(10)
 
-#     return {
-#         "message": "Slow response completed"
-#     }
+@router.put("/me", response_model=UserResponse)
+def update_me(
+    user_data: UserUpdate,
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    return update_current_user(
+        current_user=current_user,
+        user_data=user_data,
+        db=db
+    )
 
 @router.get("/test")
 def test_query(limit: int):

@@ -1444,4 +1444,14 @@ Concept learned: Gateway must preserve important parts of the incoming request �
 
 Checkpoint: Admin authorization for the user-details API is complete.
 
+## sprint 20
+
+Added PUT /api/users/me for profile updates.
+Added name/email validation and duplicate-email protection.
+Added Gateway PUT proxy support.
+Tested JWT-protected PUT successfully.
+Added integration tests for PUT.
+Current test issue: Redis rate-limit bucket exhausted (429) + one fixed duplicate email.
+Next: wait for bucket refill → fix test email → rerun tests.
+
 

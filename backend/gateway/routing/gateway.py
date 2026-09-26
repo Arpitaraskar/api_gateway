@@ -4,6 +4,7 @@ from fastapi.responses import Response
 from gateway.core.auth import get_current_user
 from gateway.routing.routes import get_route
 from gateway.services.proxy_service import forward_request
+from typing import Any
 
 
 router = APIRouter()
@@ -84,6 +85,33 @@ async def gateway_path_post(
     service_name: str,
     path: str,
     request: Request
+):
+    return await handle_gateway_request(
+        service_name=service_name,
+        request=request,
+        path=path
+    )
+
+
+@router.put("/api/{service_name}")
+async def gateway_root_put(
+    service_name: str,
+    request: Request,
+    current_user: dict = Depends(get_current_user)
+):
+    return await handle_gateway_request(
+        service_name=service_name,
+        request=request
+    )
+
+
+@router.put("/api/{service_name}/{path:path}")
+async def gateway_path_put(
+    service_name: str,
+    path: str,
+    request: Request,
+  
+    current_user: dict = Depends(get_current_user)
 ):
     return await handle_gateway_request(
         service_name=service_name,

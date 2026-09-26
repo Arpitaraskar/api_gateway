@@ -7,6 +7,7 @@ from services.user_service.core.security import (
     verify_password
 )
 from services.user_service.core.jwt import create_access_token
+from services.user_service.schemas.user import UserUpdate
 
 
 def register_user(
@@ -80,3 +81,38 @@ def login_user(
         "access_token": access_token,
         "token_type": "bearer"
     }
+
+# update user --email,name
+
+
+def update_current_user(
+    current_user: models.User,
+    user_data: UserUpdate,
+    db: Session
+) -> models.User:
+
+    if user_data.name is not None:
+        current_user.name = user_data.name
+
+    if user_data.email is not None:
+        existing_user = (
+            db.query(models.User)
+            .filter(
+                models.User.email == user_data.email,
+                models.User.id != current_user.id
+            )
+            .first()
+        )
+
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already registered"
+            )
+
+        current_user.email = user_data.email
+
+    db.commit()
+    db.refresh(current_user)
+
+    return current_user
