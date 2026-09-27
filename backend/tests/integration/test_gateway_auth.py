@@ -37,6 +37,7 @@
 #     assert response.json()["email"] == "updated_test@example.com"
 
 import httpx
+import uuid
 
 
 def test_users_me_requires_authentication():
@@ -68,9 +69,8 @@ def test_users_me_accepts_valid_token(access_token):
 
     assert response.status_code == 200
 
-
 def test_update_user_through_gateway(access_token):
-    email = "gateway_update@example.com"
+    email = f"gateway_update_{uuid.uuid4().hex}@example.com"
 
     response = httpx.put(
         "http://127.0.0.1:8000/api/users/me",

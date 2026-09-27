@@ -1,8 +1,16 @@
 import redis
 
+from gateway.core.config import (
+    REDIS_HOST,
+    REDIS_PORT,
+    REDIS_DB,
+)
+
+
 redis_client = redis.Redis(
-    host="localhost",
-    port=6379,
+    host=REDIS_HOST,
+    port=REDIS_PORT,
+    db=REDIS_DB,
     decode_responses=True,
-     socket_connect_timeout=2 
+    socket_connect_timeout=2
 )

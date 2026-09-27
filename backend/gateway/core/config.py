@@ -3,12 +3,15 @@ from dotenv import load_dotenv
 import hashlib
 
 
-load_dotenv()
 
-# temporary code checking
+APP_ENV = os.getenv("APP_ENV", "development")
 
-print("GATEWAY JWT SECRET LOADED:", bool(os.getenv("JWT_SECRET")))
-print("GATEWAY JWT ALGORITHM:", os.getenv("JWT_ALGORITHM"))
+load_dotenv(".env")
+
+if APP_ENV == "test":
+    load_dotenv(".env.test", override=True)
+
+
 
 secret = os.getenv("JWT_SECRET")
 
@@ -36,7 +39,8 @@ UPSTREAM_TIMEOUT=int(os.getenv("UPSTREAM_TIMEOUT",5))
 CIRCUIT_FAILURE_THRESHOLD=int(os.getenv("CIRCUIT_FAILURE_THRESHOLD",3))
 CIRCUIT_RECOVERY_TIMEOUT=int(os.getenv("CIRCUIT_RECOVERY_TIMEOUT",10))
 
-print(
-    "JWT SECRET FINGERPRINT:",
-    hashlib.sha256(secret.encode()).hexdigest()[:12]
-)
+
+
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+REDIS_DB = int(os.getenv("REDIS_DB", 0))

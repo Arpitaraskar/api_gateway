@@ -1454,4 +1454,15 @@ Added integration tests for PUT.
 Current test issue: Redis rate-limit bucket exhausted (429) + one fixed duplicate email.
 Next: wait for bucket refill → fix test email → rerun tests.
 
+## sprint 21
+✅ Fixed test environment rate limiting using .env.test
+✅ Separated production vs test Redis configuration
+✅ Added test rate limit: 1000 capacity / 100 refill
+✅ Verified PUT /api/users/me through Gateway
+✅ Verified JWT authentication for PUT
+✅ Verified invalid email validation (422)
+✅ Tested name-only and email-only updates
+✅ Added integration tests for profile update
+✅ Ran full integration suite: 9/9 passed
+
 
