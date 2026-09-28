@@ -1,0 +1,114 @@
+ name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      APP_ENV: test
+
+      USER_SERVICE_URL: http://127.0.0.1:8001
+
+      JWT_SECRET: ci-test-secret
+      JWT_ALGORITHM: HS256
+      JWT_EXPIRATION_MINUTES: 30
+
+      DATABASE_URL: sqlite:///./user_service.db
+
+      MAX_RETRIES: 2
+      RETRY_BACKOFF_BASE: 2
+      UPSTREAM_TIMEOUT: 5
+      CIRCUIT_FAILURE_THRESHOLD: 3
+      CIRCUIT_RECOVERY_TIMEOUT: 10
+
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+      REDIS_DB: 1
+
+      BUCKET_CAPACITY: 1000
+      REFILL_RATE: 100
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run database migrations
+        run: alembic upgrade head
+
+      - name: Start User Service
+        run: |
+          nohup python -m uvicorn services.user_service.main:app \
+            --host 127.0.0.1 \
+            --port 8001 \
+            > user_service.log 2>&1 &
+
+      - name: Start Gateway
+        run: |
+          nohup python -m uvicorn gateway.main:app \
+            --host 127.0.0.1 \
+            --port 8000 \
+            > gateway.log 2>&1 &
+
+      - name: Wait for services
+        run: |
+          python - <<'PY'
+          import time
+          import urllib.request
+
+          services = [
+              "http://127.0.0.1:8001/health",
+              "http://127.0.0.1:8000/health/users",
+          ]
+
+          for url in services:
+              for _ in range(30):
+                  try:
+                      with urllib.request.urlopen(url, timeout=2) as response:
+                          if response.status == 200:
+                              print(f"{url} is ready")
+                              break
+                  except Exception:
+                      time.sleep(1)
+              else:
+                  raise SystemExit(f"{url} did not become healthy")
+          PY
+
+      - name: Run integration tests
+        run: pytest tests/integration -v
+
+      - name: Upload service logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: service-logs
+          path: |
+            gateway.log
+            user_service.log
