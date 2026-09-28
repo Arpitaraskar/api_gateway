@@ -1,4 +1,4 @@
- name: CI
+name: CI
 
 on:
   push:
@@ -54,16 +54,20 @@ jobs:
         with:
           python-version: "3.11"
           cache: "pip"
+          cache-dependency-path: backend/requirements.txt
 
       - name: Install dependencies
+        working-directory: backend
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
       - name: Run database migrations
+        working-directory: backend
         run: alembic upgrade head
 
       - name: Start User Service
+        working-directory: backend
         run: |
           nohup python -m uvicorn services.user_service.main:app \
             --host 127.0.0.1 \
@@ -71,6 +75,7 @@ jobs:
             > user_service.log 2>&1 &
 
       - name: Start Gateway
+        working-directory: backend
         run: |
           nohup python -m uvicorn gateway.main:app \
             --host 127.0.0.1 \
@@ -78,6 +83,7 @@ jobs:
             > gateway.log 2>&1 &
 
       - name: Wait for services
+        working-directory: backend
         run: |
           python - <<'PY'
           import time
@@ -102,6 +108,7 @@ jobs:
           PY
 
       - name: Run integration tests
+        working-directory: backend
         run: pytest tests/integration -v
 
       - name: Upload service logs
@@ -110,5 +117,5 @@ jobs:
         with:
           name: service-logs
           path: |
-            gateway.log
-            user_service.log
+            backend/gateway.log
+            backend/user_service.log
