@@ -6,9 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-#temporary for checking
-print("USER SERVICE JWT SECRET LOADED:", bool(os.getenv("JWT_SECRET")))
-print("USER SERVICE JWT ALGORITHM:", os.getenv("JWT_ALGORITHM"))
+
 
 secret = os.getenv("JWT_SECRET")
 
@@ -26,7 +24,3 @@ if not JWT_SECRET:
     )
 
 
-print(
-    "JWT SECRET FINGERPRINT:",
-    hashlib.sha256(secret.encode()).hexdigest()[:12]
-)

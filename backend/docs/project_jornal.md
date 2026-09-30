@@ -1465,4 +1465,45 @@ Next: wait for bucket refill → fix test email → rerun tests.
 ✅ Added integration tests for profile update
 ✅ Ran full integration suite: 9/9 passed
 
+## sprint 21
 
+ Fixed Alembic migration history
+ Tested migrations on a fresh database
+ Committed the fix
+ Pushed to GitHub
+ GitHub Actions CI passed ✅
+ Learned git status
+ Learned git diff
+ Learned staged changes
+ Learned git diff --staged
+
+
+
+## sprint 22
+
+Docker image             ✅
+Container running        ✅
+Environment variables    ✅
+FastAPI                  ✅
+Port 8001                ✅
+/health                  ✅
+Database connectivity    ✅
+/docs                    ✅
+
+## sprint 23
+
+Dockerized User Service with Python 3.11.
+Added Alembic migrations inside Docker.
+Added docker-entrypoint.sh to automatically run migrations on startup.
+Tested automatic database creation successfully.
+Created Docker named volume: user-service-data.
+Connected SQLite database to the Docker volume.
+Deleted and recreated the container.
+Verified the user data still exists after container recreation.
+Confirmed JWT login and /users/me work after recreation.
+
+
+User Service Dockerization: ✅
+Automatic migrations: ✅
+SQLite persistence: ✅
+Volume persistence test: ✅
