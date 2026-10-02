@@ -1,0 +1,38 @@
+services:
+
+  user-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: user-service
+    env_file:
+      - .env
+    ports:
+      - "8001:8001"
+    volumes:
+      - user-service-data:/app/data
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    container_name: api-gateway
+    env_file:
+      - .env
+    environment:
+      USER_SERVICE_URL: http://user-service:8001
+      REDIS_HOST: redis
+    ports:
+      - "8000:8000"
+    depends_on:
+      - user-service
+      - redis
+
+volumes:
+  user-service-data:

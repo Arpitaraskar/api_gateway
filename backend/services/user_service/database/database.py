@@ -14,7 +14,7 @@ load_dotenv()
 # allows different databases to be used in development and deployment.
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "sqlite:///./user_service.db"
+    "sqlite:///./data/user_service.db"
 )
 
 

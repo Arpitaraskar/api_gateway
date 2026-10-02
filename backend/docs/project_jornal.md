@@ -1508,3 +1508,39 @@ Automatic migrations: ✅
 SQLite persistence: ✅
 Volume persistence test: ✅
 Volume persistence test: ✅
+
+
+### sprint 24
+
+✅ Created User Service Dockerfile
+✅ Added automatic Alembic migrations on container startup
+✅ Added SQLite Docker volume for database persistence
+✅ Created Gateway Dockerfile
+✅ Fixed Gateway Docker startup command
+✅ Created Docker Compose for Gateway + User Service + Redis
+✅ Fixed Docker networking (127.0.0.1 → user-service)
+✅ Configured Redis hostname (localhost → redis) inside Docker
+✅ Resolved container-name conflicts
+✅ Resolved Docker image build unexpected EOF
+✅ Successfully started all 3 containers
+✅ Verified Gateway → User Service → Database communication
+🎯 Final test: /health/users returned healthy / healthy
+
+
+### sprint 25
+
+✅ Docker Compose
+✅ Gateway container
+✅ User Service container
+✅ Redis container
+✅ Docker networking
+✅ Alembic migrations
+✅ SQLite persistent volume
+✅ Login + JWT
+✅ Protected GET
+✅ PUT profile update
+✅ Redis rate limiting → 429
+✅ No JWT → 401
+✅ Invalid JWT → 401
+✅ User Service failure → unhealthy
+✅ Database survives container restart
