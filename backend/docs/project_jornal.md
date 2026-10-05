@@ -1544,3 +1544,16 @@ Volume persistence test: ✅
 ✅ Invalid JWT → 401
 ✅ User Service failure → unhealthy
 ✅ Database survives container restart
+
+## sprint 26
+
+✅ Containers start
+✅ Gateway healthcheck
+✅ User Service healthcheck
+✅ Redis connectivity
+✅ Gateway → User Service networking
+✅ JWT login
+✅ JWT-protected request
+✅ Database access
+✅ Rate limiting
+✅ 429 response + retry information
